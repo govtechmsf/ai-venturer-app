@@ -1,6 +1,6 @@
 import streamlit as st
-# import uuid
-# import sys
+import uuid
+import sys
 
 # import kendra_chat_anthropic as anthropic
 # import kendra_chat_bedrock_titan as bedrock_titan
