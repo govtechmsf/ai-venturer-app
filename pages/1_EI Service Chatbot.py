@@ -11,7 +11,7 @@ import sys
 
 # USER_ICON = "images/user-icon.png"
 # AI_ICON = "images/ai-icon.png"
-# MAX_HISTORY_LENGTH = 5
+MAX_HISTORY_LENGTH = 5
 # PROVIDER_MAP = {
 #     'openai': 'Open AI',
 #     'anthropic': 'Anthropic',
@@ -133,36 +133,36 @@ import sys
 #     st.session_state.input = ""
 #     st.session_state["chat_history"] = []
 
-# def handle_input():
-#     input = st.session_state.input
-#     question_with_id = {
-#         'question': input,
-#         'id': len(st.session_state.questions)
-#     }
-#     st.session_state.questions.append(question_with_id)
+def handle_input():
+    input = st.session_state.input
+    question_with_id = {
+        'question': input,
+        'id': len(st.session_state.questions)
+    }
+    st.session_state.questions.append(question_with_id)
 
-#     chat_history = st.session_state["chat_history"]
-#     if len(chat_history) == MAX_HISTORY_LENGTH:
-#         chat_history = chat_history[:-1]
+    chat_history = st.session_state["chat_history"]
+    if len(chat_history) == MAX_HISTORY_LENGTH:
+        chat_history = chat_history[:-1]
 
-#     llm_chain = st.session_state['llm_chain']
-#     chain = st.session_state['llm_app']
-#     result = chain.run_chain(llm_chain, input, chat_history)
-#     answer = result['answer']
-#     chat_history.append((input, answer))
+    llm_chain = st.session_state['llm_chain']
+    chain = st.session_state['llm_app']
+    result = chain.run_chain(llm_chain, input, chat_history)
+    answer = result['answer']
+    chat_history.append((input, answer))
     
-#     document_list = []
-#     if 'source_documents' in result:
-#         for d in result['source_documents']:
-#             if not (d.metadata['source'] in document_list):
-#                 document_list.append((d.metadata['source']))
+    document_list = []
+    if 'source_documents' in result:
+        for d in result['source_documents']:
+            if not (d.metadata['source'] in document_list):
+                document_list.append((d.metadata['source']))
 
-#     st.session_state.answers.append({
-#         'answer': result,
-#         'sources': document_list,
-#         'id': len(st.session_state.questions)
-#     })
-#     st.session_state.input = ""
+    st.session_state.answers.append({
+        'answer': result,
+        'sources': document_list,
+        'id': len(st.session_state.questions)
+    })
+    st.session_state.input = ""
 
 # def write_user_message(md):
 #     col1, col2 = st.columns([1,12])
@@ -211,5 +211,5 @@ import sys
 #     write_user_message(q)
 #     write_chat_message(a, q)
 
-# st.markdown('---')
-# input = st.text_input("You are talking to an AI, ask any question.", key="input", on_change=handle_input)
+st.markdown('---')
+input = st.text_input("You are talking to an AI, ask any question.", key="input", on_change=handle_input)
