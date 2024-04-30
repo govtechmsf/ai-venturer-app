@@ -18,6 +18,11 @@ st.set_page_config(page_title="EI Service Repository")
 # S3 Bucket name
 BUCKET_NAME = os.environ["S3_BUCKET_NAME"]
 
+# AWS User Credentials
+AWS_ACCESS_KEY_ID=os.environ["AWS_ACCESS_KEY_ID"]
+AWS_SECRET_ACCESS_KEY=os.environ["AWS_SECRET_ACCESS_KEY"]
+AWS_REGION=os.environ["AWS_REGION"]
+
 # Kendra & S3 Config
 s3_data_source_id=os.environ["S3_DATA_SOURCE_ID"]
 kendra_index_id=os.environ["KENDRA_INDEX_ID"]
@@ -56,7 +61,7 @@ def write_top_bar():
 
 # Function to upload files to S3
 def upload_to_s3(local_file_path, s3_file_path):
-    s3 = boto3.client('s3')
+    s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY, region_name=AWS_REGION)
     try:
         s3.upload_file(local_file_path, BUCKET_NAME, s3_file_path)
         return True
@@ -72,7 +77,7 @@ def upload_to_s3(local_file_path, s3_file_path):
 
 # Function to list files in S3 bucket
 def list_s3_files():
-    s3 = boto3.client('s3')
+    s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY, region_name=AWS_REGION)
 
     try:
         response = s3.list_objects(Bucket=BUCKET_NAME)
@@ -181,7 +186,7 @@ def get_text_from_docx(docx_file):
 # Initialize the Kendra client
 def init_kendra_client():
     try:
-        return boto3.client('kendra')
+        return boto3.client('kendra', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY, region_name=AWS_REGION)
     except NoCredentialsError:
         st.error("AWS credentials not found. Please configure your credentials.")
         return None
@@ -235,7 +240,7 @@ def display_dict_as_table(data_dict):
 
 
 def get_file_from_s3(s3_file_path):
-    s3 = boto3.client('s3')
+    s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY, region_name=AWS_REGION)
     try:
         file_obj = io.BytesIO()
         s3.download_fileobj(BUCKET_NAME, s3_file_path, file_obj)
