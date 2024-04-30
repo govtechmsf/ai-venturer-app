@@ -28,7 +28,7 @@ def build_chain():
   #OPTION 1: USING BEDROCK SUBSCRIPTION FROM "ANOTHER AWS ACCOUNT"
   sts = boto3.client('sts')
   resp = sts.assume_role(
-  RoleArn='arn:aws:iam::017490449790:role/WorkshopBedrockCrossAccountAccess', #INSERT BEDROCK ROLE FROM "ANOTHER AWS ACCOUNT"
+  RoleArn='arn:aws:iam::767397814310:role/service-role', #INSERT BEDROCK ROLE FROM "ANOTHER AWS ACCOUNT"
   RoleSessionName='testsession')
   new_session = boto3.Session(
   aws_access_key_id=resp['Credentials']['AccessKeyId'],
