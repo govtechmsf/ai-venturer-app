@@ -22,23 +22,27 @@ class bcolors:
 MAX_HISTORY_LENGTH = 5
 
 def build_chain():
+  AWS_ACCESS_KEY_ID=os.environ["AWS_ACCESS_KEY_ID"]
+  AWS_SECRET_ACCESS_KEY=os.environ["AWS_SECRET_ACCESS_KEY"]
   region = os.environ["AWS_REGION"]
   kendra_index_id = os.environ["KENDRA_INDEX_ID"]
+  boto3_bedrock = boto3.client('bedrock-runtime', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY, region_name='us-east-1')
+  boto3_kendra = boto3.client('kendra', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY, region_name=region)
 
   #OPTION 1: USING BEDROCK SUBSCRIPTION FROM "ANOTHER AWS ACCOUNT"
-  sts = boto3.client('sts')
-  resp = sts.assume_role(
-  RoleArn='arn:aws:iam::767397814310:role/service-role', #INSERT BEDROCK ROLE FROM "ANOTHER AWS ACCOUNT"
-  RoleSessionName='testsession')
-  new_session = boto3.Session(
-  aws_access_key_id=resp['Credentials']['AccessKeyId'],
-  aws_secret_access_key=resp['Credentials']['SecretAccessKey'],
-  aws_session_token=resp['Credentials']['SessionToken'])
+#   sts = boto3.client('sts')
+#   resp = sts.assume_role(
+#   RoleArn='arn:aws:iam::767397814310:role/service-role', #INSERT BEDROCK ROLE FROM "ANOTHER AWS ACCOUNT"
+#   RoleSessionName='testsession')
+#   new_session = boto3.Session(
+#   aws_access_key_id=resp['Credentials']['AccessKeyId'],
+#   aws_secret_access_key=resp['Credentials']['SecretAccessKey'],
+#   aws_session_token=resp['Credentials']['SessionToken'])
 
-  boto3_bedrock = new_session.client(
-    service_name='bedrock-runtime',
-    region_name=region,
-  )
+#   boto3_bedrock = new_session.client(
+#     service_name='bedrock-runtime',
+#     region_name=region,
+#   )
 
   #OPTION 2: USING BEDROCK SUBSCRIPTION FROM "THIS AWS ACCOUNT"
   # boto3_bedrock = boto3.client(
@@ -59,7 +63,7 @@ def build_chain():
       model_id="anthropic.claude-v2"
   )
       
-  retriever = AmazonKendraRetriever(index_id=kendra_index_id,top_k=5,region_name=region)
+  retriever = AmazonKendraRetriever(index_id=kendra_index_id,top_k=5,region_name=region,client=boto3_kendra)
 
 
   prompt_template = """
