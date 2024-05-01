@@ -1,6 +1,6 @@
 import streamlit as st
 import uuid
-import sys
+# import sys
 
 import kendra_chat_bedrock_claudev2 as bedrock_claudev2
 import kendra_chat_falcon_40b as falcon40b
@@ -48,22 +48,24 @@ else:
     user_id = str(uuid.uuid4())
     st.session_state['user_id'] = user_id
 
+st.session_state['llm_app1'] = bedrock_claudev2
+st.session_state['llm_chain1'] = bedrock_claudev2.build_chain()
 
-if 'llm_chain1' not in st.session_state:
-    if (len(sys.argv) > 1):
-        if (sys.argv[1] == 'bedrock_claudev2'):
-            st.session_state['llm_app1'] = bedrock_claudev2
-            st.session_state['llm_chain1'] = bedrock_claudev2.build_chain()
-        elif (sys.argv[1] == 'llama2'):
-            st.session_state['llm_app1'] = llama2
-            st.session_state['llm_chain1'] = llama2.build_chain()
-        elif (sys.argv[1] == 'falcon'):
-            st.session_state['llm_app1'] = falcon40b
-            st.session_state['llm_chain1'] = falcon40b.build_chain()
-        else:
-            raise Exception("Unsupported LLM: ", sys.argv[1])
-    else:
-        raise Exception("Usage: streamlit run app.py <bedrock_claude|bedrock_claudev2|llama2|falcon40b>")
+# if 'llm_chain1' not in st.session_state:
+#     if (len(sys.argv) > 1):
+#         if (sys.argv[1] == 'bedrock_claudev2'):
+#             st.session_state['llm_app1'] = bedrock_claudev2
+#             st.session_state['llm_chain1'] = bedrock_claudev2.build_chain()
+#         elif (sys.argv[1] == 'llama2'):
+#             st.session_state['llm_app1'] = llama2
+#             st.session_state['llm_chain1'] = llama2.build_chain()
+#         elif (sys.argv[1] == 'falcon'):
+#             st.session_state['llm_app1'] = falcon40b
+#             st.session_state['llm_chain1'] = falcon40b.build_chain()
+#         else:
+#             raise Exception("Unsupported LLM: ", sys.argv[1])
+#     else:
+#         raise Exception("Usage: streamlit run app.py <bedrock_claude|bedrock_claudev2|llama2|falcon40b>")
 
 if 'chat_history1' not in st.session_state:
     st.session_state['chat_history1'] = []
@@ -98,7 +100,8 @@ st.session_state.questions = st.session_state.questions1
 st.session_state.answers = st.session_state.answers1
 st.session_state.input = st.session_state.input1
 
-chat_provider = sys.argv[1]
+# chat_provider = sys.argv[1]
+chat_provider = "bedrock_claudev2"
 
 st.markdown("""
         <style>
@@ -129,7 +132,8 @@ def write_top_bar():
     with col1:
         st.image(EISER_ICON,use_column_width=False,width=150)
     with col2:
-        selected_provider = sys.argv[1]
+        # selected_provider = sys.argv[1]
+        selected_provider = "bedrock_claudev2"
         if selected_provider in PROVIDER_MAP:
             provider = PROVIDER_MAP[selected_provider]
         else:
